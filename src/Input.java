@@ -107,20 +107,25 @@ public class Input {
     // настройка пользовательского режима
     public static void inputUserGameMode() {
         Output.outputUserSettings();
-        Scanner scanstartNumber = new Scanner(System.in);
-        int startNumber = scanstartNumber.nextInt();
+        int startNumber = Counting.checkNumber();
         System.out.println("Введите шаг, с которым следует вести счет: ");
-        Scanner scanstepNumber = new Scanner(System.in);
-        int stepNumber = scanstepNumber.nextInt();
+        int stepNumber = Counting.checkNumber();
         Output.outputUserGameMode();
         Scanner scanOrder = new Scanner(System.in);
         String order = scanOrder.nextLine();
+        while (order.equals("") || order.equals(" ") || (!(order.equals("1")) && !(order.equals("2")))) {
+            System.out.println("Выберите, пожалуйста, одно из предложенных значений");
+            scanOrder = new Scanner(System.in);
+            order = scanOrder.nextLine();
+        }
         mainCount(startNumber, stepNumber, order);
     }
 
     // счет
     public static void mainCount(int startNumber, int stepNumber, String order) {
-        System.out.println("");
+        String arrayForSameCompany[] = Arrays.copyOf(arrayCompany, arrayCompany.length);
+        arraySameCompany = arrayForSameCompany;
+        arraySameNumber = arrayNumber;
         Output.startCounting();
         for (int i = 0; i < arrayNumber; i++) {
             System.out.print(arrayCompany[i] + "  ");

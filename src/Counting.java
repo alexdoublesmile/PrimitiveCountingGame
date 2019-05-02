@@ -6,6 +6,10 @@ public class Counting {
     static int wordsNumber;
     static String Mode = "";
 
+    public static String mode() {
+        return Mode;
+    }
+
     public static void start() {
         Mode = "";
         Output.outputStart();
@@ -23,29 +27,12 @@ public class Counting {
         }
     }
 
-    public static String mode() {
-        return Mode;
-    }
 
     public static void startFast() {
-        Scanner scanNumber = new Scanner(System.in);
         System.out.println("Введите количество участников: ");
-        String number = scanNumber.nextLine();
-        try {
-            Integer.parseInt(number);
-        } catch (Exception e) {
-            System.out.println("Количество участников стоит вводить числом");
-        }
-        int n = Integer.parseInt(number);
-        Scanner scanWords = new Scanner(System.in);
+        int n = checkNumber();
         System.out.println("Введите количество слов в считалочке: ");
-        String words = scanWords.nextLine();
-        try {
-            Integer.parseInt(words);
-        } catch (Exception e) {
-            System.out.println("Количество слов стоит вводить числом");
-        }
-        int x = Integer.parseInt(words);
+        int x = checkNumber();
         Counting.countingFast(n, x);
     }
 
@@ -148,6 +135,18 @@ public class Counting {
             }
         }
         return wordsNumber;
+    }
+
+    public static int checkNumber() {
+        Scanner scanNumber = new Scanner(System.in);
+        String number = scanNumber.nextLine();
+        while (!(number.matches("[0-9]+"))) {
+            System.out.println("Введите, пожлуйста, значение в виде числа");
+            scanNumber = new Scanner(System.in);
+            number = scanNumber.nextLine();
+        }
+        int n = Integer.parseInt(number);
+        return n;
     }
 
     public static boolean positive(String tryPositive) {
