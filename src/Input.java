@@ -121,28 +121,6 @@ public class Input {
     // счет
     public static void mainCount(int startNumber, int stepNumber, String order) {
         System.out.println("");
-
-
-
-        for (int i = 0; i < arrayNumber; i++) {
-            System.out.print(arrayCompany[i] + "  ");
-        }
-        System.out.println("");
-        System.out.println(arrayNumber);
-        System.out.println("");
-        System.out.println("");
-        for (int i = 0; i < arraySameNumber; i++) {
-            System.out.print(arraySameCompany[i] + "  ");
-        }
-        System.out.println("");
-        System.out.println(arraySameNumber);
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-
-
-
-
         Output.startCounting();
         for (int i = 0; i < arrayNumber; i++) {
             System.out.print(arrayCompany[i] + "  ");
@@ -180,28 +158,6 @@ public class Input {
             outputTempResult(arrayNumber, numStep, outPlayer);
             numStep++;
         }
-
-
-
-        System.out.println("");
-        for (int i = 0; i < arrayNumber; i++) {
-            System.out.print(arrayCompany[i] + "  ");
-        }
-        System.out.println("");
-        System.out.println(arrayNumber);
-        System.out.println("");
-        System.out.println("");
-        for (int i = 0; i < arraySameNumber; i++) {
-            System.out.print(arraySameCompany[i] + "  ");
-        }
-        System.out.println("");
-        System.out.println(arraySameNumber);
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-
-
-
     }
 
     public static void outputTempResult(int arrayNumber, int num, String out) {
