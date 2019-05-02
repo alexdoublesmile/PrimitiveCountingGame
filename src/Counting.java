@@ -4,9 +4,10 @@ import java.util.Scanner;
 public class Counting {
 
     static int wordsNumber;
+    static String Mode = "";
 
     public static void start() {
-        String Mode = "";
+        Mode = "";
         Output.outputStart();
         Scanner scanMode = new Scanner(System.in);
         Mode = scanMode.nextLine();
@@ -17,8 +18,13 @@ public class Counting {
         if(Mode.equals("2")) {
             Counting.countingDetail();
         } else  {
+            Output.outputFastStart();
             startFast();
         }
+    }
+
+    public static String mode() {
+        return Mode;
     }
 
     public static void startFast() {
@@ -58,6 +64,7 @@ public class Counting {
         Input.inputConditions();
 
         // счет
+        Output.outputGameMode();
         Input.inputGameMode();
 
         // результат
@@ -66,7 +73,42 @@ public class Counting {
         // финал
         Output.outputAgain();
         Input.inputStartAgain();
-        Output.outputFinal();
+    }
+
+    public static void countingDetailSecond() {
+        // ввод считалочки
+        Output.outputCounting();
+        wordsNumber = Input.inputCounting();
+
+        // вывод всех параметров
+        Input.inputConditions();
+
+        // счет
+        Output.outputGameMode();
+        Input.inputGameMode();
+
+        // результат
+        Input.inputResult();
+
+        // финал
+        Output.outputAgain();
+        Input.inputStartAgain();
+    }
+
+    public static void countingDetailThird() {
+        // вывод всех параметров
+        Input.inputConditions();
+
+        // счет
+        Output.outputGameMode();
+        Input.inputGameMode();
+
+        // результат
+        Input.inputResult();
+
+        // финал
+        Output.outputAgain();
+        Input.inputStartAgain();
     }
 
     public static void countingFast(int n, int wordsNumber) {
@@ -95,7 +137,6 @@ public class Counting {
         Output.outputFastResult(company, n);
         Output.outputAgain();
         Input.inputStartAgain();
-        Output.outputFinal();
     }
 
     public static int countWords(String counting) {
@@ -110,16 +151,30 @@ public class Counting {
     }
 
     public static boolean positive(String tryPositive) {
-        if (!(Arrays.asList(Input.positive).contains(tryPositive.toLowerCase()))) {
-            String Yes = Input.inputTestAnswer();
-            if (Yes.equals("1")) {
+        String MaybeYes = "";
+        if (!(Arrays.asList(Input.negative).contains(tryPositive.toLowerCase())) && !(Arrays.asList(Input.positive).contains(tryPositive.toLowerCase()))) {
+            while (!(MaybeYes.equals("1") || (MaybeYes.equals("2")))) {
+                Output.outputAnswer();
+                Scanner scanYes = new Scanner(System.in);
+                MaybeYes = scanYes.nextLine();
+                if (!(MaybeYes.equals("1") || (MaybeYes.equals("2")))) {
+                    System.out.println("Выберите, пожалуйста, один из предложенных вариантов");
+                }
+            }
+            if (MaybeYes.equals("1")) {
                 String ArrayCopy[] = Arrays.copyOf(Input.positive, Input.positive.length + 1);
                 Input.positive = ArrayCopy;
                 Input.positive[Input.positive.length - 1] = tryPositive.toLowerCase();
+                return true;
             } else {
+                String ArrayCopy[] = Arrays.copyOf(Input.negative, Input.negative.length + 1);
+                Input.negative = ArrayCopy;
+                Input.negative[Input.negative.length - 1] = tryPositive.toLowerCase();
                 return false;
             }
 
+        } else if (Arrays.asList(Input.negative).contains(tryPositive.toLowerCase())) {
+            return false;
         }
         return true;
     }

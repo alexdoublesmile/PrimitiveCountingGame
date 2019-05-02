@@ -4,29 +4,17 @@ import java.util.Scanner;
 public class Input {
 
     static int arrayNumber = 1;
+    static int arraySameNumber = 1;
     static int countPlayers = 1;
     static int wordsNumber;
-    static String answer = "";
-    static String gameMode = "3";
-    static int num = 1;
+    static int numStep = 1;
     static String arrayCompany[] = new String[arrayNumber];
+    static String arraySameCompany[] = new String[arraySameNumber];
+    static String outPlayer;
 
     // "динамические" массивы положительных и отрицательных ответов
     static String[] positive = new String[]{"да", "давай", "ок", "ага", "угу", "конечно", "можно", "сыграем", "верно", "точно", "правильно", "хорошо", "будут", "y", "yes", "ok", "lf", "1"};
     static String[] negative = new String[]{"нет", "не", "неа", "хватит", "хорош", "yt", "ytn", "неверно", "0"};
-
-    // общий уточняющий вопрос
-    public static String inputTestAnswer() {
-        while (!(answer.equals("1") || (answer.equals("2")))) {
-            Output.outputAnswer();
-            Scanner scanYes = new Scanner(System.in);
-            answer = scanYes.nextLine();
-            if (!(answer.equals("1") || (answer.equals("2")))) {
-                System.out.println("Выберите, пожалуйста, один из предложенных вариантов");
-            }
-        }
-        return answer;
-    }
 
     // регистрация участников
     public static void inputRegister() {
@@ -38,39 +26,55 @@ public class Input {
             Scanner scanNameAgain = new Scanner(System.in);
             arrayCompany[(arrayNumber - 1)] = scanNameAgain.nextLine();
         }
-        System.out.println("Будут ли еще игроки?");
-        Scanner scanMore = new Scanner(System.in);
-        answer = scanMore.nextLine();
-        if (Arrays.asList(negative).contains(answer.toLowerCase()) || !(Counting.positive(answer))) {
-
-        } else if (!(Arrays.asList(negative).contains(answer.toLowerCase()) && Counting.positive(answer))) {
+            countPlayers++;
+        if (countPlayers == 2) {
             String ArrayCopy[] = Arrays.copyOf(arrayCompany, arrayCompany.length + 1);
             arrayCompany = ArrayCopy;
-            countPlayers++;
             arrayNumber++;
             inputRegister();
+        } else if (countPlayers > 2) {
+            System.out.println("Будут ли еще игроки?");
+            Scanner scanMore = new Scanner(System.in);
+            String answer = scanMore.nextLine();
+            if (Counting.positive(answer) == false) {
+
+            } else {
+
+                String ArrayCopy[] = Arrays.copyOf(arrayCompany, arrayCompany.length + 1);
+                arrayCompany = ArrayCopy;
+                arrayNumber++;
+                inputRegister();
+            }
+            countPlayers = 1;
         }
-        countPlayers = 1;
+        String arrayForSameCompany[] = Arrays.copyOf(arrayCompany, arrayCompany.length);
+        arraySameCompany = arrayForSameCompany;
+        arraySameNumber = arrayNumber;
+    }
+
+    public static String[] sameCompany() {
+        return arraySameCompany;
     }
 
     // ввод считалочки
-    public static String inputNewCounting() {
+    public static int inputCounting() {
         Scanner scanLine = new Scanner(System.in);
         String counting = scanLine.nextLine();
-        wordsNumber = Counting.countWords(counting);
-        System.out.println("Кол-во слов в считалочке: " + wordsNumber + ". Верно?");
+        int severalWords = Counting.countWords(counting);
+        while (severalWords < 2) {
+            System.out.println("Следует ввести что-то чуть более похожее на считалочку:)");
+            scanLine = new Scanner(System.in);
+            counting = scanLine.nextLine();
+            severalWords = Counting.countWords(counting);
+        }
+        System.out.println("Кол-во слов в считалочке: " + severalWords + ". Верно?");
         Scanner scanAgain = new Scanner(System.in);
         String scan = scanAgain.nextLine();
-        return scan;
-    }
-
-    // проверка считалочки
-    public static int inputCounting() {
-        String again = inputNewCounting();
-        if (!(Arrays.asList(negative).contains(again.toLowerCase())) && Counting.positive(again)) {
-        } else if (Arrays.asList(negative).contains(again.toLowerCase()) || !(Counting.positive(again))) {
+        if (Counting.positive(scan) == false) {
             System.out.println("Введите еще разок Вашу считалочку (не забывайте раделять слова пробелом): ");
-            inputNewCounting();
+            inputCounting();
+        } else {
+            wordsNumber = severalWords;
         }
         return wordsNumber;
     }
@@ -82,7 +86,6 @@ public class Input {
 
     // выбор режима
     public static void inputGameMode() {
-        Output.outputGameMode();
         Scanner scanGameMode = new Scanner(System.in);
         String gameMode = scanGameMode.nextLine();
         switch (gameMode) {
@@ -106,7 +109,7 @@ public class Input {
         Output.outputUserSettings();
         Scanner scanstartNumber = new Scanner(System.in);
         int startNumber = scanstartNumber.nextInt();
-        System.out.println("2) Введите шаг, с которым следует вести счет: ");
+        System.out.println("Введите шаг, с которым следует вести счет: ");
         Scanner scanstepNumber = new Scanner(System.in);
         int stepNumber = scanstepNumber.nextInt();
         Output.outputUserGameMode();
@@ -117,53 +120,106 @@ public class Input {
 
     // счет
     public static void mainCount(int startNumber, int stepNumber, String order) {
-        if (order.equals("2")) {
-            // удаление участников по считалочке из массива(счет все время с первого)
-            num = 1;
-            while (arrayNumber > 1) {
-                if ((wordsNumber*stepNumber + startNumber) % arrayNumber > 0) {
-                    for (int i = ((wordsNumber*stepNumber + startNumber) % arrayNumber); i < arrayNumber; i++) {
-                        arrayCompany[i - 1] = arrayCompany[i];
-                    }
-                }
-                /// уменьшение массива
-                arrayCut(arrayCompany);
-                arrayNumber--;
-                /// вывод текущего результата
-                System.out.println("Шаг " + num + ". Остаются: ");
-                for (int i = 0; i < arrayNumber; i++) {
-                    System.out.print(arrayCompany[i] + "  ");
-                }
-                System.out.println("");
-                System.out.println("");
-                num++;
-            }
-        } else {
-            // удаление участников по считалочке из массива(счет подряд)
-            System.out.println("----------------------------------------------------------------");
-            int finalNumber = wordsNumber*stepNumber + startNumber;
-            num = 1;
-            while (arrayNumber > 1) {
+        System.out.println("");
+
+
+
+        for (int i = 0; i < arrayNumber; i++) {
+            System.out.print(arrayCompany[i] + "  ");
+        }
+        System.out.println("");
+        System.out.println(arrayNumber);
+        System.out.println("");
+        System.out.println("");
+        for (int i = 0; i < arraySameNumber; i++) {
+            System.out.print(arraySameCompany[i] + "  ");
+        }
+        System.out.println("");
+        System.out.println(arraySameNumber);
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+
+
+
+
+        Output.startCounting();
+        for (int i = 0; i < arrayNumber; i++) {
+            System.out.print(arrayCompany[i] + "  ");
+        }
+        System.out.println("");
+        System.out.println("");
+        int finalNumber = wordsNumber*stepNumber + (startNumber - 1);
+        numStep = 1;
+        while (arrayNumber > 1) {
+            if (order.equals("1")) {
                 if(finalNumber % arrayNumber > 0) {
-                    for (int i = (finalNumber) % arrayNumber; i < arrayNumber; i++) {
+                    outPlayer = arrayCompany[finalNumber % arrayNumber - 1];
+                    for (int i = finalNumber % arrayNumber; i < arrayNumber; i++) {
                         arrayCompany[i - 1] = arrayCompany[i];
                     }
-                    finalNumber = (finalNumber % arrayNumber) + wordsNumber - 1;
+                    finalNumber = (finalNumber % arrayNumber) + wordsNumber*stepNumber - 1;
                 } else {
-                    finalNumber = wordsNumber;
+                    outPlayer = arrayCompany[arrayCompany.length - 1];
+                    finalNumber = wordsNumber*stepNumber;
                 }
-                /// уменьшение массива
-                arrayCut(arrayCompany);
-                arrayNumber--;
-                /// вывод текущего результата
-                System.out.println("Шаг " + num + ". Остаются: ");
-                for (int i = 0; i < arrayNumber; i++) {
-                    System.out.print(arrayCompany[i] + "  ");
+            } else {
+                if (finalNumber % arrayNumber > 0) {
+                    outPlayer = arrayCompany[finalNumber % arrayNumber - 1];
+                    for (int i = finalNumber % arrayNumber; i < arrayNumber; i++) {
+                        arrayCompany[i - 1] = arrayCompany[i];
+                    }
+                } else {
+                    outPlayer = arrayCompany[arrayCompany.length - 1];
                 }
-                System.out.println("");
-                System.out.println("");
-                num++;
             }
+            /// уменьшение массива
+            arrayCut(arrayCompany);
+            arrayNumber--;
+            /// вывод текущего результата
+            outputTempResult(arrayNumber, numStep, outPlayer);
+            numStep++;
+        }
+
+
+
+        System.out.println("");
+        for (int i = 0; i < arrayNumber; i++) {
+            System.out.print(arrayCompany[i] + "  ");
+        }
+        System.out.println("");
+        System.out.println(arrayNumber);
+        System.out.println("");
+        System.out.println("");
+        for (int i = 0; i < arraySameNumber; i++) {
+            System.out.print(arraySameCompany[i] + "  ");
+        }
+        System.out.println("");
+        System.out.println(arraySameNumber);
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+
+
+
+    }
+
+    public static void outputTempResult(int arrayNumber, int num, String out) {
+        if(!(arrayNumber == 1)) {
+            System.out.println("Шаг " + num + ". Вылетает: " + out);
+            System.out.println("Остаются: ");
+            for (int i = 0; i < arrayNumber; i++) {
+                if(i == arrayNumber - 1) {
+                    System.out.print(arrayCompany[i] + ".");
+                } else {
+                    System.out.print(arrayCompany[i] + ", ");
+                }
+            }
+            System.out.println("");
+            System.out.println("");
+        } else {
+            System.out.println("Шаг последний. Остаётся " + arrayCompany[0] + ".");
+            System.out.println("");
         }
     }
 
@@ -180,12 +236,43 @@ public class Input {
 
     // перезапуск
     public static void inputStartAgain() {
+        String was = Counting.mode();
         Scanner scanAgain = new Scanner(System.in);
         String again = scanAgain.nextLine();
-        if (!(Arrays.asList(negative).contains(answer.toLowerCase()) && Counting.positive(again))) {
-            Counting.start();
-        } else if (Arrays.asList(negative).contains(again.toLowerCase())) {
+        if (Counting.positive(again) == false) {
+            Output.outputFinal();
+        } else {
+            if(was.equals("2")) {
+                Output.outputContinue();
+                inputContinue();
+            } else  {
+                Counting.start();
+            }
 
+        }
+    }
+
+    // условия перезапуска
+    public static void inputContinue() {
+        Scanner scanContinue = new Scanner(System.in);
+        String countinue = scanContinue.nextLine();
+        switch (countinue) {
+            case ("1"):
+                Counting.start();
+                break;
+            case ("2"):
+                arrayCompany = arraySameCompany;
+                arrayNumber = arraySameNumber;
+                Counting.countingDetailSecond();
+                break;
+            case ("3"):
+                arrayCompany = arraySameCompany;
+                arrayNumber = arraySameNumber;
+                Counting.countingDetailThird();
+                break;
+            default:
+                System.out.println("Выберите, пожалуйста, одно из предложенных значений");
+                inputContinue();
         }
     }
 }
