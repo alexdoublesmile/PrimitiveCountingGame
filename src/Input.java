@@ -60,21 +60,32 @@ public class Input {
     public static int inputCounting() {
         Scanner scanLine = new Scanner(System.in);
         String counting = scanLine.nextLine();
-        int severalWords = Counting.countWords(counting);
-        while (severalWords < 2) {
-            System.out.println("Следует ввести что-то чуть более похожее на считалочку:)");
-            scanLine = new Scanner(System.in);
-            counting = scanLine.nextLine();
-            severalWords = Counting.countWords(counting);
-        }
-        System.out.println("Кол-во слов в считалочке: " + severalWords + ". Верно?");
-        Scanner scanAgain = new Scanner(System.in);
-        String scan = scanAgain.nextLine();
-        if (Counting.positive(scan) == false) {
-            System.out.println("Введите еще разок Вашу считалочку (не забывайте раделять слова пробелом): ");
-            inputCounting();
+        if (counting.matches("[0-9]+")) {
+            wordsNumber = Integer.parseInt(counting);
         } else {
-            wordsNumber = severalWords;
+            int severalWords = Counting.countWords(counting);
+            while (severalWords < 2) {
+                System.out.println("Следует ввести что-то чуть более похожее на считалочку:)");
+                scanLine = new Scanner(System.in);
+                counting = scanLine.nextLine();
+                severalWords = Counting.countWords(counting);
+            }
+            System.out.println("Кол-во слов в считалочке: " + severalWords + ". Верно?");
+            Scanner scanAgain = new Scanner(System.in);
+            String scan = scanAgain.nextLine();
+            if (Counting.positive(scan) == false) {
+                System.out.println("..может тогда " + (severalWords - 1) + "?");
+                Scanner scanMoreAgain = new Scanner(System.in);
+                String scanMore = scanMoreAgain.nextLine();
+                if (Counting.positive(scanMore) == false) {
+                    System.out.println("Введите еще разок Вашу считалочку (не забывайте раделять слова пробелами): ");
+                    inputCounting();
+                } else {
+                    wordsNumber = severalWords;
+                }
+            } else {
+                wordsNumber = severalWords;
+            }
         }
         return wordsNumber;
     }
@@ -184,7 +195,7 @@ public class Input {
         }
     }
 
-    // обрезка массива
+    // уменьшение массива
     public static void arrayCut(String ArrayName[]) {
         String ArrayCopy[] = new String[ArrayName.length - 1];
         System.arraycopy(ArrayName, 0, ArrayCopy, 0, ArrayCopy.length);

@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.regex.*;
 
 public class Counting {
 
@@ -127,14 +128,12 @@ public class Counting {
     }
 
     public static int countWords(String counting) {
-        wordsNumber = 1;
-        char ch[] = counting.toCharArray();
-        for(int i = 0; i < ch.length; i++) {
-            if(ch[i] == (' ')) {
-                wordsNumber++;
-            }
-        }
-        return wordsNumber;
+        int count = 0;
+        Pattern pattern = Pattern.compile("[A-Za-z0-9А-Яа-я]+");
+        Matcher matcher = pattern.matcher(counting);
+        while (matcher.find())
+            count++;
+        return count;
     }
 
     public static int checkNumber() {

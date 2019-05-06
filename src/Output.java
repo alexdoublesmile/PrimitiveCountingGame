@@ -2,8 +2,8 @@ public class Output {
 
     public static void outputStart() {
         System.out.println("В какую считалочку предпочитаете сыграть?");
-        System.out.println("1 - Быстрый вариант");
-        System.out.println("2 - Детальный вариант");
+        System.out.println("- 1 - Быстрый вариант");
+        System.out.println("- 2 - Детальный вариант");
     }
 
     public static void outputFastStart() {
@@ -21,7 +21,7 @@ public class Output {
 
     public static void outputCounting() {
         System.out.println("----------------------------------------------------------------");
-        System.out.println("Введите Вашу считалочку: ");
+        System.out.println("Введите Вашу считалочку или количество слов в ней: ");
     }
 
     public static void startCounting() {
@@ -45,9 +45,9 @@ public class Output {
 
     public static void outputGameMode() {
         System.out.println("Как будем считать?");
-        System.out.println("1 - Все стоят кружком. Считаем от начала до конца навылет");
-        System.out.println("2 - Все стоят в ряд. Считаем каждый раз с начала ряда");
-        System.out.println("3 - Свои правила");
+        System.out.println("- 1 - Все стоят кружком. Считаем от начала до конца навылет");
+        System.out.println("- 2 - Все стоят в ряд. Считаем каждый раз с начала ряда");
+        System.out.println("- 3 - Свои правила");
 
     }
 
@@ -100,8 +100,8 @@ public class Output {
 
     public static void outputAnswer() {
         System.out.println("Не совсем понятен Ваш ответ.. Это означает \"Да\" ?");
-        System.out.println("1 - Да");
-        System.out.println("2 - Нет");
+        System.out.println("- 1 - Да");
+        System.out.println("- 2 - Нет");
     }
 }
 
