@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Output {
 
     public static void outputStart() {
@@ -19,12 +21,33 @@ public class Output {
         System.out.println("----------------------------------------------------------------");
     }
 
-    public static void outputCounting() {
-        System.out.println("----------------------------------------------------------------");
-        System.out.println("Введите Вашу считалочку или количество слов в ней: ");
+    public static void outputName(int n) {
+        System.out.println("Введите имя " + n + " игрока: ");
     }
 
-    public static void startCounting() {
+    public static void outputNameAgain() {
+        System.out.println("Будут ли еще игроки?");
+    }
+
+    public static void outputCounting() {
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("Введите считалочку или количество слов в ней: ");
+    }
+
+    public static void outputCountCheck(int n) {
+        System.out.println("Кол-во слов в считалочке: " + n + ". Верно?");
+    }
+
+    public static void outputCountCheckAgain(int n) {
+        System.out.println("..может тогда " + (n - 1) + "?");
+    }
+
+    public static void outputCountingAgain() {
+        System.out.println("Введите еще разок Вашу считалочку (не забывайте раделять слова пробелами): ");
+        Input.inputCounting();
+    }
+
+    public static void outputstartCounting() {
         System.out.println("----------------------------------------------------------------");
         System.out.println("--------------------   Поехали!!!  -----------------------------");
         System.out.println("----------------------------------------------------------------");
@@ -54,11 +77,13 @@ public class Output {
     public static void outputUserSettings() {
         System.out.println("----------------------------------------------------------------");
         System.out.println("Чтобы создать свои правила, следует ввести дополнительные данные ");
-        System.out.println("------- Информацию следует вводить только цифрами --------");
         System.out.println("");
-        System.out.println("Введите номер участника, с которого следует начинать счет: ");
+        System.out.println("Введите номер участника, с которого начинать счет: ");
     }
 
+    public static void outputUserSettingsStep() {
+        System.out.println("Введите шаг, с которым следует вести счет: ");
+    }
 
     public static void outputUserGameMode() {
         System.out.println("Выберите порядок счета после вылета одного из участников:");
@@ -66,6 +91,27 @@ public class Output {
         System.out.println("- 2 - считать каждый раз с начала очереди");
     }
 
+    // временный результат, выводимый при счете
+    public static void outputTempResult(String ArrayName[], int arrayNumber, int num, String out) {
+        if(!(arrayNumber == 1)) {
+            System.out.println("Шаг " + num + ". Вылетает: " + out);
+            System.out.println("Остаются: ");
+            for (int i = 0; i < arrayNumber; i++) {
+                if(i == arrayNumber - 1) {
+                    System.out.print(ArrayName[i] + ".");
+                } else {
+                    System.out.print(ArrayName[i] + ", ");
+                }
+            }
+            System.out.println("");
+            System.out.println("");
+        } else {
+            System.out.println("Шаг последний. Остаётся " + ArrayName[0] + ".");
+            System.out.println("");
+        }
+    }
+
+    // конечный результат детального счета
     public static void outputResult(String ArrayName[], int arrayNumber) {
         for (int i = 0; i < arrayNumber; i++) {
             System.out.print("* Поздравляем Вас, " + ArrayName[i] + ". Вы - победитель! *");
@@ -73,6 +119,7 @@ public class Output {
         System.out.println("");
     }
 
+    // конечный результат быстрого счета
     public static void outputFastResult(int ArrayName[], int arrayNumber) {
         for (int i = 0; i < arrayNumber; i++) {
             System.out.print("Остается: " + ArrayName[i]);
@@ -102,6 +149,24 @@ public class Output {
         System.out.println("Не совсем понятен Ваш ответ.. Это означает \"Да\" ?");
         System.out.println("- 1 - Да");
         System.out.println("- 2 - Нет");
+    }
+
+
+    public static void outputAnswerAgain() {
+        System.out.println("Выберите, пожалуйста, одно из предложенных значений");
+    }
+
+    public static void outputWhat() {
+        System.out.println("Введите, пожалуйста, что-то более внятное :)");
+    }
+
+    public static boolean outputCheckedNumber(String s) {
+        while (!(s.matches("[0-9]+"))) {
+            System.out.println("Введите, пожлуйста, значение в виде числа");
+            Scanner scanS = new Scanner(System.in);
+            s = scanS.nextLine();
+        }
+        return true;
     }
 }
 
