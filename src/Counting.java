@@ -16,10 +16,10 @@ public class Counting {
         Scanner scanMode = new Scanner(System.in);
         Mode = scanMode.nextLine();
         if(!(Mode.equals("1") || Mode.equals("2"))) {
-            System.out.println("Выберите, пожалуйста, одно из предложенных значений");
+            Output.outputAnswerAgain();
             start();
         }
-        if(Mode.equals("2")) {
+        else if (Mode.equals("2")) {
             Counting.countingDetail();
         } else  {
             Output.outputFastStart();
@@ -29,9 +29,9 @@ public class Counting {
 
 
     public static void startFast() {
-        System.out.println("Введите количество участников: ");
+        Output.outputPlayersFast();
         int n = Input.checkNumber();
-        System.out.println("Введите количество слов в считалочке: ");
+        Output.outputCountingFast();
         int x = Input.checkNumber();
         Counting.countingFast(n, x);
     }

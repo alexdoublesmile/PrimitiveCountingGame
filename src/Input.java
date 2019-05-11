@@ -70,7 +70,7 @@ class Input {
             Output.outputNameAgain();
             Scanner scanMore = new Scanner(System.in);
             String answer = scanMore.nextLine();
-            if (positive(answer) == false) {
+            if (!(positive(answer))) {
 
             } else {
 
@@ -103,11 +103,11 @@ class Input {
             Output.outputCountCheck(severalWords);
             Scanner scanAgain = new Scanner(System.in);
             String scan = scanAgain.nextLine();
-            if (positive(scan) == false) {
+            if (!(positive(scan))) {
                 Output.outputCountCheckAgain(severalWords);
                 Scanner scanMoreAgain = new Scanner(System.in);
                 String scanMore = scanMoreAgain.nextLine();
-                if (positive(scanMore) == false) {
+                if (!(positive(scanMore))) {
                     Output.outputCountingAgain();
                 } else {
                     wordsNumber = severalWords;
@@ -167,9 +167,7 @@ class Input {
         arraySameCompany = arrayForSameCompany;
         arraySameNumber = arrayNumber;
         Output.outputstartCounting();
-        for (int i = 0; i < arrayNumber; i++) {
-            System.out.print(arrayCompany[i] + "  ");
-        }
+        Output.outputAllPlayers(arrayCompany, arrayNumber);
         int finalNumber = wordsNumber*stepNumber + (startNumber - 1);
         numStep = 1;
         while (arrayNumber > 1) {
@@ -212,7 +210,7 @@ class Input {
         String was = Counting.mode();
         Scanner scanAgain = new Scanner(System.in);
         String again = scanAgain.nextLine();
-        if (positive(again) == false) {
+        if (!(positive(again))) {
             Output.outputFinal();
         } else {
             if(was.equals("2")) {
@@ -253,10 +251,12 @@ class Input {
     public static int checkNumber() {
         Scanner scanNumber = new Scanner(System.in);
         String number = scanNumber.nextLine();
-        int n = 0;
-        if (Output.outputCheckedNumber(number)) {
-            n = Integer.parseInt(number);
+        while (!(number.matches("[0-9]+"))) {
+            Output.outputCheckedNumber();
+            Scanner scanS = new Scanner(System.in);
+            number = scanS.nextLine();
         }
+        int n = Integer.parseInt(number);
         return n;
     }
 }

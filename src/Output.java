@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 public class Output {
 
     public static void outputStart() {
@@ -29,6 +27,10 @@ public class Output {
         System.out.println("Будут ли еще игроки?");
     }
 
+    public static void outputPlayersFast() {
+        System.out.println("Введите количество участников: ");
+    }
+
     public static void outputCounting() {
         System.out.println("----------------------------------------------------------------");
         System.out.println("Введите считалочку или количество слов в ней: ");
@@ -47,10 +49,22 @@ public class Output {
         Input.inputCounting();
     }
 
+    public static void outputCountingFast() {
+        System.out.println("Введите количество слов в считалочке: ");
+    }
+
     public static void outputstartCounting() {
         System.out.println("----------------------------------------------------------------");
         System.out.println("--------------------   Поехали!!!  -----------------------------");
         System.out.println("----------------------------------------------------------------");
+        System.out.println("");
+    }
+
+    public static void outputAllPlayers(String ArrayName[], int arrayNumber) {
+        for (int i = 0; i < arrayNumber; i++) {
+            System.out.print(ArrayName[i] + "  ");
+        }
+        System.out.println("");
         System.out.println("");
     }
 
@@ -151,7 +165,6 @@ public class Output {
         System.out.println("- 2 - Нет");
     }
 
-
     public static void outputAnswerAgain() {
         System.out.println("Выберите, пожалуйста, одно из предложенных значений");
     }
@@ -160,13 +173,8 @@ public class Output {
         System.out.println("Введите, пожалуйста, что-то более внятное :)");
     }
 
-    public static boolean outputCheckedNumber(String s) {
-        while (!(s.matches("[0-9]+"))) {
-            System.out.println("Введите, пожлуйста, значение в виде числа");
-            Scanner scanS = new Scanner(System.in);
-            s = scanS.nextLine();
-        }
-        return true;
+    public static void outputCheckedNumber() {
+        System.out.println("Введите, пожлуйста, значение в виде числа");
     }
 }
 
