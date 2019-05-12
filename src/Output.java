@@ -45,7 +45,8 @@ public class Output {
     }
 
     public static void outputCountingAgain() {
-        System.out.println("Введите еще разок Вашу считалочку (не забывайте раделять слова пробелами): ");
+        System.out.println("Введите еще разок Вашу считалочку (не забывайте о пробелах)");
+        System.out.println(".. ну или просто введите количество слов в ней: ");
         Input.inputCounting();
     }
 

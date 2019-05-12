@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.regex.*;
 
 class Input {
 
@@ -16,18 +17,17 @@ class Input {
     private static String[] positive = new String[]{"да", "давай", "ок", "ага", "угу", "конечно", "можно", "сыграем", "верно", "точно", "правильно", "хорошо", "будут", "y", "yes", "ok", "lf", "1"};
     private static String[] negative = new String[]{"нет", "не", "неа", "хватит", "хорош", "yt", "ytn", "неверно", "0"};
 
-    static boolean positive(String tryPositive) {
+    // тест ввода положительных и отрицательных ответов
+    public static boolean positive(String tryPositive) {
         while (tryPositive.equals("") || tryPositive.equals(" ")) {
             Output.outputWhat();
-            Scanner scantryPositive = new Scanner(System.in);
-            tryPositive = scantryPositive.nextLine();
+            tryPositive = inputString();
         }
         String MaybeYes = "";
         if (!(Arrays.asList(negative).contains(tryPositive.toLowerCase())) && !(Arrays.asList(positive).contains(tryPositive.toLowerCase()))) {
             while (!(MaybeYes.equals("1") || (MaybeYes.equals("2")))) {
                 Output.outputAnswer();
-                Scanner scanYes = new Scanner(System.in);
-                MaybeYes = scanYes.nextLine();
+                MaybeYes = inputString();
                 if (!(MaybeYes.equals("1") || (MaybeYes.equals("2")))) {
                     Output.outputAnswerAgain();
                 }
@@ -50,15 +50,61 @@ class Input {
         return true;
     }
 
-    // регистрация участников
+    // тест ввода численных значений
+    public static int checkNumber() {
+        String number = inputString();
+        while (!(number.matches("[0-9]+"))) {
+            Output.outputCheckedNumber();
+            number = inputString();
+        }
+        int n = Integer.parseInt(number);
+        return n;
+    }
+
+    // ввод данных для быстрого счета
+    public static void startFast() {
+        Output.outputPlayersFast();
+        int n = Input.checkNumber();
+        Output.outputCountingFast();
+        int x = Input.checkNumber();
+        int company[] = new int[n];
+        Counting.countingFast(company, n, x);
+    }
+
+    // инициализация участников для быстрого режима
+    public static void FastCountPlayers(int ArrayName[], int n) {
+        for(int i = 0; i < n; i++) {
+            ArrayName[i] = i + 1;
+        }
+    }
+
+    // счет в быстром режиме
+    public static void countFast(int ArrayName[], int n, int firstNum) {
+        int lastNum = firstNum;
+        while (n > 1) {
+            if(lastNum % n > 0) {
+                for (int i = lastNum % n; i < n; i++) {
+                    ArrayName[i - 1] = ArrayName[i];
+                }
+                lastNum = (lastNum % n) + firstNum - 1;
+            } else {
+                lastNum = firstNum;
+            }
+            int companyCopy2[] = new int[ArrayName.length - 1];
+            System.arraycopy(ArrayName, 0, companyCopy2, 0, companyCopy2.length);
+            ArrayName = companyCopy2;
+            n--;
+        }
+        Output.outputFastResult(ArrayName, n);
+    }
+
+    // ввод имен участников
     public static void inputRegister() {
         Output.outputName(countPlayers);
-        Scanner scanName = new Scanner(System.in);
-        arrayCompany[(arrayNumber - 1)] = scanName.nextLine();
+        arrayCompany[(arrayNumber - 1)] = inputString();
         while (arrayCompany[(arrayNumber - 1)].equals("") || arrayCompany[arrayNumber - 1].equals(" ")) {
             Output.outputWhat();
-            Scanner scanNameAgain = new Scanner(System.in);
-            arrayCompany[(arrayNumber - 1)] = scanNameAgain.nextLine();
+            arrayCompany[(arrayNumber - 1)] = inputString();
         }
             countPlayers++;
         if (countPlayers == 2) {
@@ -68,8 +114,7 @@ class Input {
             inputRegister();
         } else if (countPlayers > 2) {
             Output.outputNameAgain();
-            Scanner scanMore = new Scanner(System.in);
-            String answer = scanMore.nextLine();
+            String answer = inputString();
             if (!(positive(answer))) {
 
             } else {
@@ -87,47 +132,56 @@ class Input {
     }
 
     // ввод считалочки
-    public static int inputCounting() {
-        Scanner scanLine = new Scanner(System.in);
-        String counting = scanLine.nextLine();
+    public static void inputCounting() {
+        String counting = inputString();
         if (counting.matches("[0-9]+")) {
             wordsNumber = Integer.parseInt(counting);
         } else {
-            int severalWords = Counting.countWords(counting);
+            int severalWords = countWords(counting);
             while (severalWords < 2) {
                 Output.outputWhat();
-                scanLine = new Scanner(System.in);
-                counting = scanLine.nextLine();
-                severalWords = Counting.countWords(counting);
+                counting = inputString();
+                if (counting.matches("[0-9]+")) {
+                    wordsNumber = Integer.parseInt(counting);
+                    severalWords = wordsNumber;
+                    break;
+                } else
+                severalWords = countWords(counting);
             }
             Output.outputCountCheck(severalWords);
-            Scanner scanAgain = new Scanner(System.in);
-            String scan = scanAgain.nextLine();
+            String scan = inputString();
             if (!(positive(scan))) {
                 Output.outputCountCheckAgain(severalWords);
-                Scanner scanMoreAgain = new Scanner(System.in);
-                String scanMore = scanMoreAgain.nextLine();
+                String scanMore = inputString();
                 if (!(positive(scanMore))) {
                     Output.outputCountingAgain();
                 } else {
-                    wordsNumber = severalWords;
+                    wordsNumber = severalWords - 1;
                 }
             } else {
                 wordsNumber = severalWords;
             }
         }
-        return wordsNumber;
     }
 
-    // вывод параметров и результатов
+    // подсчет слов считалочки
+    public static int countWords(String counting) {
+        int count = 0;
+        Pattern pattern = Pattern.compile("[A-Za-z0-9А-Яа-я]+");
+        Matcher matcher = pattern.matcher(counting);
+        while (matcher.find())
+            count++;
+        return count;
+    }
+
+    // ввод и вывод параметров и результатов
     public static void inputConditions() {
         Output.outputConditions(arrayCompany, arrayNumber, wordsNumber);
     }
 
-    // выбор режима
+    // ввод выбора режима
     public static void inputGameMode() {
-        Scanner scanGameMode = new Scanner(System.in);
-        String gameMode = scanGameMode.nextLine();
+        String gameMode = inputString();
         switch (gameMode) {
             case ("1"):
                 mainCount(1, 1, "1");
@@ -144,24 +198,22 @@ class Input {
         }
     }
 
-    // настройка пользовательского режима
+    // ввод данных для пользовательского режима
     public static void inputUserGameMode() {
         Output.outputUserSettings();
         int startNumber = checkNumber();
         Output.outputUserSettingsStep();
         int stepNumber = checkNumber();
         Output.outputUserGameMode();
-        Scanner scanOrder = new Scanner(System.in);
-        String order = scanOrder.nextLine();
+        String order = inputString();
         while (!(order.equals("1")) && !(order.equals("2"))) {
             Output.outputAnswerAgain();
-            scanOrder = new Scanner(System.in);
-            order = scanOrder.nextLine();
+            order = inputString();
         }
         mainCount(startNumber, stepNumber, order);
     }
 
-    // счет
+    // счет в детальном режиме
     public static void mainCount(int startNumber, int stepNumber, String order) {
         String arrayForSameCompany[] = Arrays.copyOf(arrayCompany, arrayCompany.length);
         arraySameCompany = arrayForSameCompany;
@@ -193,7 +245,7 @@ class Input {
                 }
             }
             /// текущее уменьшение массива во время счета
-            Counting.arrayCut(arrayCompany);
+            arrayCut(arrayCompany);
             arrayNumber--;
             /// текущий результат во время счета
             Output.outputTempResult(arrayCompany, arrayNumber, numStep, outPlayer);
@@ -201,6 +253,7 @@ class Input {
         }
     }
 
+    // ввод и вывод результатов
     public static void inputResult() {
         Output.outputResult(arrayCompany, arrayNumber);
     }
@@ -208,8 +261,7 @@ class Input {
     // перезапуск
     public static void inputStartAgain() {
         String was = Counting.mode();
-        Scanner scanAgain = new Scanner(System.in);
-        String again = scanAgain.nextLine();
+        String again = inputString();
         if (!(positive(again))) {
             Output.outputFinal();
         } else {
@@ -223,10 +275,9 @@ class Input {
         }
     }
 
-    // условия перезапуска
+    // ввод условий перезапуска
     public static void inputContinue() {
-        Scanner scanContinue = new Scanner(System.in);
-        String countinue = scanContinue.nextLine();
+        String countinue = inputString();
         switch (countinue) {
             case ("1"):
                 Counting.start();
@@ -247,16 +298,17 @@ class Input {
         }
     }
 
-    // проверка и перевод вводимых данных в численный вид
-    public static int checkNumber() {
-        Scanner scanNumber = new Scanner(System.in);
-        String number = scanNumber.nextLine();
-        while (!(number.matches("[0-9]+"))) {
-            Output.outputCheckedNumber();
-            Scanner scanS = new Scanner(System.in);
-            number = scanS.nextLine();
-        }
-        int n = Integer.parseInt(number);
-        return n;
+    // общий шаблон уменьшения массива
+    public static void arrayCut(String ArrayName[]) {
+        String ArrayCopy[] = new String[ArrayName.length - 1];
+        System.arraycopy(ArrayName, 0, ArrayCopy, 0, ArrayCopy.length);
+        ArrayName = ArrayCopy;
+    }
+
+    // общий шаблон ввода строковых данных
+    public static String inputString() {
+        Scanner scanString = new Scanner(System.in);
+        String s = scanString.nextLine();
+        return s;
     }
 }
